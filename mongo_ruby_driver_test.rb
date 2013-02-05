@@ -7,10 +7,11 @@ require 'yaml'
 
 @count = java.util.concurrent.atomic.AtomicInteger.new
 
-java_import java.util.concurrent.Executors
-java_import java.util.concurrent.TimeUnit
+module JUC
+  include_package "java.util.concurrent"
+end
 
-@executor = Executors.new_fixed_thread_pool(10)
+@executor = JUC::Executors.new_fixed_thread_pool(10)
 
 include Mongo
 include Record
@@ -78,7 +79,7 @@ Benchmark.bm do |bench_me|
         @user_ids << @users.insert(random_personal_info)
       end
     end
-    @executor.await_termination(10, TimeUnit::SECONDS)
+    @executor.await_termination(10, JUC::TimeUnit::SECONDS)
   end
 
   # updates while creating indexes
@@ -93,7 +94,7 @@ Benchmark.bm do |bench_me|
         @users.update({:_id => id }, random_personal_info)
       end
     end
-    @executor.await_termination(10, TimeUnit::SECONDS)
+    @executor.await_termination(10, JUC::TimeUnit::SECONDS)
   end
 
   # deletes while creating indexes
@@ -108,7 +109,7 @@ Benchmark.bm do |bench_me|
         @users.remove({:_id => id })
       end
     end
-    @executor.await_termination(10, TimeUnit::SECONDS)
+    @executor.await_termination(10, JUC::TimeUnit::SECONDS)
   end
 
   @user_ids = []
@@ -124,7 +125,7 @@ Benchmark.bm do |bench_me|
         @user_ids << @users.insert(random_personal_info)
       end
     end
-    @executor.await_termination(10, TimeUnit::SECONDS)
+    @executor.await_termination(10, JUC::TimeUnit::SECONDS)
   end
 
   # updates while dropping indexes
@@ -139,7 +140,7 @@ Benchmark.bm do |bench_me|
         @users.update({:_id => id }, random_personal_info)
       end
     end
-    @executor.await_termination(10, TimeUnit::SECONDS)
+    @executor.await_termination(10, JUC::TimeUnit::SECONDS)
   end
 
   # deletes while dropping indexes
@@ -154,7 +155,7 @@ Benchmark.bm do |bench_me|
         @users.remove({:_id => id })
       end
     end
-    @executor.await_termination(10, TimeUnit::SECONDS)
+    @executor.await_termination(10, JUC::TimeUnit::SECONDS)
   end
 end
 
