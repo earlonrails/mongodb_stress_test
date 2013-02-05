@@ -1,0 +1,10 @@
+# config/database.yml
+defaults: &defaults
+  host: localhost
+  database: stress_test
+  port: 27017
+  records: 100000
+  profiling_level : "off"
+
+test:
+  <<: *defaults
